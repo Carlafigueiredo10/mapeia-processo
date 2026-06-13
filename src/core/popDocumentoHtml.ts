@@ -83,7 +83,7 @@ export function popDocumentoHtml(pop: Pop): string {
 
   return `
     <header class="doc-header">
-      <h1>${esc(pop.nomeProcesso) || 'Procedimento Operacional Padrão'}</h1>
+      <h1>${esc(pop.nomeProcesso || 'Procedimento Operacional Padrão')}</h1>
       <div class="meta">
         ${pop.unidade ? `<span>Unidade: ${esc(pop.unidade)}</span>` : ''}
         <span>Versão: ${esc(pop.versao || '1.0')}</span>
