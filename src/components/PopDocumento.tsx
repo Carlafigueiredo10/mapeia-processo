@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { Pop } from '../core/types';
 import { popDocumentoHtml, POP_DOC_CSS } from '../core/popDocumentoHtml';
 import { esc } from '../core/esc';
+import { exportarPopJson, nomeArquivo } from '../core/popIo';
 
 interface Props {
   pop: Pop;
@@ -31,13 +32,41 @@ export default function PopDocumento({ pop }: Props) {
     }, 300);
   };
 
+  const baixarEditavel = () => {
+    const blob = new Blob([exportarPopJson(pop)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nomeArquivo(pop);
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // Um clique: avisa, baixa o arquivo editável (revisável) E abre o PDF.
+  const exportarDocumentos = () => {
+    const ok = window.confirm(
+      'Vão baixar DOIS arquivos — salve os dois:\n\n' +
+        '• PDF do POP — o documento final, para imprimir/compartilhar.\n' +
+        '• Arquivo editável — para revisar ou alterar o POP depois.\n\n' +
+        'Para editar este POP no futuro, abra o arquivo com este nome:\n' +
+        `"${nomeArquivo(pop)}"\n\n` +
+        'Continuar?',
+    );
+    if (!ok) return;
+    baixarEditavel();
+    exportarPdf();
+  };
+
   return (
     <div className="documento">
       <div className="documento__actions">
-        <button className="btn btn--primary" onClick={exportarPdf}>
-          Exportar PDF
+        <button className="btn btn--primary" onClick={exportarDocumentos}>
+          Exportar documentos POP
         </button>
       </div>
+      <p className="dica">
+        Baixa <strong>dois arquivos</strong>: o PDF do POP <em>e</em> o arquivo editável (para revisar depois).
+      </p>
       <style>{POP_DOC_CSS}</style>
       <div className="pop-doc documento__folha" dangerouslySetInnerHTML={{ __html: html }} />
     </div>
