@@ -38,4 +38,33 @@ describe('popIo', () => {
     expect(nomeArquivo(pop)).toBe('concessao-de-pensao.json');
     expect(nomeArquivo({ ...pop, nomeProcesso: '' })).toBe('pop.json');
   });
+
+  it('bloqueia prototype pollution via __proto__', () => {
+    const malicioso = '{"nomeProcesso":"X","__proto__":{"poluido":true}}';
+    const lido = importarPopJson(malicioso);
+    expect(lido.nomeProcesso).toBe('X');
+    // o protótipo de Object NÃO foi poluído
+    expect(({} as Record<string, unknown>).poluido).toBeUndefined();
+    expect(Object.prototype.hasOwnProperty.call(Object.prototype, 'poluido')).toBe(false);
+  });
+
+  it('coage tipos inesperados sem quebrar (etapas/sistemas malformados)', () => {
+    const sujo = JSON.stringify({
+      nomeProcesso: 'X',
+      sistemasUtilizados: ['SEI', 123, null, 'SAPIENS'], // mistura
+      etapas: [
+        { tipo: 'normal', acaoPrincipal: 'A', sistemas: 'nao-array' as unknown },
+        { tipo: 'condicional', acaoPrincipal: 'Q?', cenarios: 'tambem-nao-array' as unknown },
+        'lixo-string',
+        42,
+      ],
+    });
+    const lido = importarPopJson(sujo);
+    expect(lido.sistemasUtilizados).toEqual(['SEI', 'SAPIENS']); // só strings
+    expect(lido.etapas).toHaveLength(4);
+    expect(lido.etapas[0].sistemas).toEqual([]); // coagido para array
+    expect(lido.etapas[1].cenarios).toEqual([]); // coagido para array
+    expect(lido.etapas[2].acaoPrincipal).toBe(''); // string solta vira etapa vazia
+    expect(lido.etapas.every((e) => typeof e.id === 'string')).toBe(true);
+  });
 });

@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      CSP (defesa em profundidade). script-src 'self' bloqueia <script> injetado
+      e scripts externos (vetor de XSS); 'unsafe-eval' é necessário porque o
+      Mermaid/dependências usam o construtor Function em runtime. style-src
+      'unsafe-inline' é exigido pelos estilos inline do Mermaid e do documento.
+      Sem backend: connect-src 'self', object-src 'none', base-uri 'none'.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
     <meta name="description" content="Mapeie seu processo, gere o POP (Procedimento Operacional Padrão) e o fluxograma em PDF — tudo no navegador, sem servidor." />
     <title>MapeiaProcesso — POP e fluxograma no navegador</title>
   </head>

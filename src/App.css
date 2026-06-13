@@ -285,3 +285,17 @@ label.inline input {
   justify-content: center;
   min-height: 300px;
 }
+.erro-boundary {
+  background: #fdecea;
+  border: 1px solid #f5c6cb;
+  border-radius: 10px;
+  padding: 24px;
+  color: #842029;
+}
+.erro-boundary h3 {
+  margin: 0 0 8px;
+}
+.erro-boundary p {
+  margin: 0 0 14px;
+  font-size: 14px;
+}

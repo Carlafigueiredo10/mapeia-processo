@@ -3,10 +3,11 @@ import type { Pop } from './core/types';
 import { popVazio } from './core/types';
 import { popParaFluxograma } from './core/popParaFluxograma';
 import { gerarMermaid } from './core/gerarMermaid';
-import { exportarPopJson, importarPopJson, nomeArquivo } from './core/popIo';
+import { exportarPopJson, importarPopJson, nomeArquivo, normalizarPop, parseJsonSeguro } from './core/popIo';
 import PopForm from './components/PopForm';
 import PopDocumento from './components/PopDocumento';
 import FluxogramaPreview from './components/FluxogramaPreview';
+import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
 
 const STORAGE_KEY = 'mapeia-processo:pop';
@@ -14,9 +15,9 @@ const STORAGE_KEY = 'mapeia-processo:pop';
 function carregar(): Pop {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...popVazio(), ...JSON.parse(raw) };
+    if (raw) return normalizarPop(parseJsonSeguro(raw));
   } catch {
-    /* ignora */
+    /* ignora — começa com POP vazio */
   }
   return popVazio();
 }
@@ -107,16 +108,18 @@ export default function App() {
             </button>
           </div>
 
-          {aba === 'documento' ? (
-            <PopDocumento pop={pop} />
-          ) : (
-            <FluxogramaPreview
-              code={mermaidCode}
-              titulo={pop.nomeProcesso || 'Fluxograma de Processo'}
-              versao={pop.versao}
-              unidade={pop.unidade}
-            />
-          )}
+          <ErrorBoundary key={aba}>
+            {aba === 'documento' ? (
+              <PopDocumento pop={pop} />
+            ) : (
+              <FluxogramaPreview
+                code={mermaidCode}
+                titulo={pop.nomeProcesso || 'Fluxograma de Processo'}
+                versao={pop.versao}
+                unidade={pop.unidade}
+              />
+            )}
+          </ErrorBoundary>
         </section>
       </main>
 

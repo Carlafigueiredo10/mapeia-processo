@@ -2,13 +2,7 @@
 // Estrutura espelhada do MapaGov: identificação + 7 seções.
 
 import type { Etapa, Pop } from './types';
-
-const esc = (s: unknown): string =>
-  String(s ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+import { esc } from './esc';
 
 const naoInformado = (v?: string) => (v && v.trim() ? esc(v) : '<i>[Não informado]</i>');
 const pendente = (v?: string) => (v && v.trim() ? esc(v) : '<i>[Pendente]</i>');
@@ -35,7 +29,7 @@ function etapaHtml(etapa: Etapa, numero: number): string {
       .join('');
     return `
       <div class="etapa etapa--decisao">
-        <div class="etapa__titulo">${numero}. ${esc(etapa.acaoPrincipal) || '[Decisão]'} <span class="tag">decisão</span></div>
+        <div class="etapa__titulo">${numero}. ${esc(etapa.acaoPrincipal || '[Decisão]')} <span class="tag">decisão</span></div>
         <ul class="cenarios">${ramos}</ul>
       </div>`;
   }
@@ -50,7 +44,7 @@ function etapaHtml(etapa: Etapa, numero: number): string {
 
   return `
     <div class="etapa">
-      <div class="etapa__titulo">${numero}. ${esc(etapa.acaoPrincipal) || '[Sem descrição]'}</div>
+      <div class="etapa__titulo">${numero}. ${esc(etapa.acaoPrincipal || '[Sem descrição]')}</div>
       ${meta.length ? `<div class="etapa__meta">${meta.join('<br>')}</div>` : ''}
       ${verifs.length ? `<div class="etapa__verif"><b>Verificações:</b><ul>${verifs.map((v) => `<li>${esc(v)}</li>`).join('')}</ul></div>` : ''}
     </div>`;

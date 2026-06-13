@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import mermaid from 'mermaid';
-import DOMPurify from 'dompurify';
+import { esc } from '../core/esc';
+import { sanitizeSvg } from '../core/sanitizeSvg';
 
 interface Props {
   code: string;
@@ -10,10 +11,6 @@ interface Props {
 }
 
 let mermaidIdCounter = 0;
-
-const escapeHtml = (s: string) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-   .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
 mermaid.initialize({
   startOnLoad: false,
@@ -48,13 +45,7 @@ export default function FluxogramaPreview({ code, titulo, versao = '1.0', unidad
       .render(renderId, code)
       .then(({ svg }) => {
         if (cancelled || !ref.current) return;
-        // foreignobject como ponto de integração HTML: preserva os rótulos HTML
-        // dos nós (Mermaid 11) e ainda neutraliza scripts/handlers.
-        ref.current.innerHTML = DOMPurify.sanitize(svg, {
-          USE_PROFILES: { svg: true, svgFilters: true },
-          ADD_TAGS: ['style', 'foreignObject'],
-          HTML_INTEGRATION_POINTS: { foreignobject: true },
-        } as Parameters<typeof DOMPurify.sanitize>[1]);
+        ref.current.innerHTML = sanitizeSvg(svg);
       })
       .catch(() => {
         if (ref.current) ref.current.textContent = 'Não foi possível renderizar o fluxograma.';
@@ -71,7 +62,7 @@ export default function FluxogramaPreview({ code, titulo, versao = '1.0', unidad
     const win = window.open('', '_blank', 'width=900,height=1200');
     if (!win) return;
     win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
-      <title>${escapeHtml(titulo || 'Fluxograma')}</title>
+      <title>${esc(titulo || 'Fluxograma')}</title>
       <style>
         @page { size: A4 portrait; margin: 16mm; }
         * { box-sizing: border-box; }
@@ -84,11 +75,11 @@ export default function FluxogramaPreview({ code, titulo, versao = '1.0', unidad
       </style></head>
       <body>
         <header class="doc-header">
-          <h1>${escapeHtml(titulo || 'Fluxograma de Processo')}</h1>
+          <h1>${esc(titulo || 'Fluxograma de Processo')}</h1>
           <div class="meta">
-            ${unidade ? `<span>Unidade: ${escapeHtml(unidade)}</span>` : ''}
-            <span>Versão: ${escapeHtml(versao)}</span>
-            <span>Data: ${escapeHtml(dataAtual)}</span>
+            ${unidade ? `<span>Unidade: ${esc(unidade)}</span>` : ''}
+            <span>Versão: ${esc(versao)}</span>
+            <span>Data: ${esc(dataAtual)}</span>
           </div>
         </header>
         <div class="diagram">${svgMarkup}</div>
