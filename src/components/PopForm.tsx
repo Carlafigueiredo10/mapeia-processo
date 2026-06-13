@@ -129,6 +129,11 @@ export default function PopForm({ pop, onChange }: Props) {
 
       <fieldset>
         <legend>5. Tarefas (etapas)</legend>
+        <p className="dica">
+          Monte o processo na ordem. Use <strong>+ Decisão</strong> para um ponto de bifurcação
+          (ex.: <em>documentação aprovada?</em>): os caminhos se separam e voltam a se juntar na
+          próxima etapa. Use <strong>↑ ↓</strong> para posicionar cada item.
+        </p>
         {pop.etapas.map((etapa, i) => (
           <div key={etapa.id} className={`etapa-card ${etapa.tipo === 'condicional' ? 'etapa-card--dec' : ''}`}>
             <div className="etapa-card__head">
@@ -173,6 +178,9 @@ export default function PopForm({ pop, onChange }: Props) {
 
             {etapa.tipo === 'condicional' && (
               <div className="cenarios-edit">
+                <p className="dica">
+                  Os caminhos abaixo partem desta decisão e voltam a se juntar na próxima etapa.
+                </p>
                 {(etapa.cenarios || []).map((c, ci) => (
                   <div key={ci} className="cenario-edit">
                     <div className="grid2">
@@ -194,8 +202,8 @@ export default function PopForm({ pop, onChange }: Props) {
           </div>
         ))}
         <div className="add-etapa">
-          <button type="button" className="btn" onClick={() => addEtapa('normal')}>+ Etapa</button>
-          <button type="button" className="btn" onClick={() => addEtapa('condicional')}>+ Decisão</button>
+          <button type="button" className="btn" onClick={() => addEtapa('normal')} title="Um passo normal do processo">+ Etapa</button>
+          <button type="button" className="btn" onClick={() => addEtapa('condicional')} title="Um ponto de bifurcação (losango), com caminhos que se separam e se reencontram">+ Decisão</button>
         </div>
       </fieldset>
 
