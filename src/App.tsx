@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Pop } from './core/types';
 import { popVazio } from './core/types';
 import { popParaFluxograma } from './core/popParaFluxograma';
 import { gerarMermaid } from './core/gerarMermaid';
+import { exportarPopJson, importarPopJson, nomeArquivo } from './core/popIo';
 import PopForm from './components/PopForm';
 import PopDocumento from './components/PopDocumento';
 import FluxogramaPreview from './components/FluxogramaPreview';
@@ -25,6 +26,7 @@ type Aba = 'documento' | 'fluxograma';
 export default function App() {
   const [pop, setPop] = useState<Pop>(carregar);
   const [aba, setAba] = useState<Aba>('documento');
+  const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const t = setTimeout(() => localStorage.setItem(STORAGE_KEY, JSON.stringify(pop)), 300);
@@ -40,6 +42,28 @@ export default function App() {
     if (confirm('Limpar tudo e começar um novo POP?')) setPop(popVazio());
   };
 
+  const baixarJson = () => {
+    const blob = new Blob([exportarPopJson(pop)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nomeArquivo(pop);
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const abrirJson = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        setPop(importarPopJson(String(reader.result)));
+      } catch {
+        alert('Não foi possível abrir: arquivo .json inválido.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   return (
     <div className="app">
       <header className="app__top">
@@ -50,7 +74,22 @@ export default function App() {
             <p>Mapeie seu processo, gere o POP e o fluxograma — tudo no navegador.</p>
           </div>
         </div>
-        <button className="btn btn--ghost" onClick={limpar}>Novo POP</button>
+        <div className="app__top-actions">
+          <input
+            ref={fileRef}
+            type="file"
+            accept="application/json,.json"
+            style={{ display: 'none' }}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) abrirJson(f);
+              e.target.value = '';
+            }}
+          />
+          <button className="btn btn--ghost" onClick={() => fileRef.current?.click()}>Abrir .json</button>
+          <button className="btn btn--ghost" onClick={baixarJson}>Baixar .json</button>
+          <button className="btn btn--ghost" onClick={limpar}>Novo POP</button>
+        </div>
       </header>
 
       <main className="app__main">
