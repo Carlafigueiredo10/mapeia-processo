@@ -1,4 +1,4 @@
-import type { Cenario, Etapa, Pop } from '../core/types';
+import type { Cenario, DocumentoPop, Etapa, Pop } from '../core/types';
 
 interface Props {
   pop: Pop;
@@ -54,6 +54,15 @@ export default function PopForm({ pop, onChange }: Props) {
     const etapa = pop.etapas[ei];
     updEtapa(ei, { cenarios: (etapa.cenarios || []).filter((_, j) => j !== ci) });
   };
+
+  // --- documentos (seção 6) ---
+  const addDoc = () => set({ documentos: [...(pop.documentos || []), { descricao: '' }] });
+  const updDoc = (i: number, patch: Partial<DocumentoPop>) => {
+    const documentos = (pop.documentos || []).slice();
+    documentos[i] = { ...documentos[i], ...patch };
+    set({ documentos });
+  };
+  const rmDoc = (i: number) => set({ documentos: (pop.documentos || []).filter((_, j) => j !== i) });
 
   return (
     <div className="form">
@@ -143,6 +152,14 @@ export default function PopForm({ pop, onChange }: Props) {
                     <input value={(etapa.docsRequeridos || []).join(', ')}
                       onChange={(e) => updEtapa(i, { docsRequeridos: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })} />
                   </label>
+                  <label>Docs gerados <small>(vírgula)</small>
+                    <input value={(etapa.docsGerados || []).join(', ')}
+                      onChange={(e) => updEtapa(i, { docsGerados: e.target.value.split(',').map((s) => s.trim()).filter(Boolean) })} />
+                  </label>
+                  <label>Verificações <small>(uma por linha)</small>
+                    <textarea rows={2} value={arrayParaLinhas(etapa.verificacoes)}
+                      onChange={(e) => updEtapa(i, { verificacoes: linhasParaArray(e.target.value) })} />
+                  </label>
                 </div>
               </>
             )}
@@ -173,6 +190,36 @@ export default function PopForm({ pop, onChange }: Props) {
           <button type="button" className="btn" onClick={() => addEtapa('normal')}>+ Etapa</button>
           <button type="button" className="btn" onClick={() => addEtapa('condicional')}>+ Decisão</button>
         </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>6. Documentos / formulários utilizados</legend>
+        {(pop.documentos || []).map((d, i) => (
+          <div key={i} className="doc-row">
+            <div className="grid2">
+              <label>Descrição
+                <input value={d.descricao} onChange={(e) => updDoc(i, { descricao: e.target.value })} />
+              </label>
+              <label>Tipo
+                <input value={d.tipo || ''} onChange={(e) => updDoc(i, { tipo: e.target.value })} placeholder="Formulário, Ofício..." />
+              </label>
+              <label>Uso
+                <input value={d.uso || ''} onChange={(e) => updDoc(i, { uso: e.target.value })} placeholder="Entrada / Saída" />
+              </label>
+              <label>Sistema
+                <input value={d.sistema || ''} onChange={(e) => updDoc(i, { sistema: e.target.value })} />
+              </label>
+            </div>
+            <div className="doc-row__foot">
+              <label className="inline">
+                <input type="checkbox" checked={!!d.obrigatorio} onChange={(e) => updDoc(i, { obrigatorio: e.target.checked })} />
+                Obrigatório
+              </label>
+              <button type="button" className="link-danger" onClick={() => rmDoc(i)}>remover</button>
+            </div>
+          </div>
+        ))}
+        <button type="button" className="link" onClick={addDoc}>+ adicionar documento</button>
       </fieldset>
 
       <fieldset>

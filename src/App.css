@@ -166,6 +166,30 @@
   gap: 8px;
   margin-top: 6px;
 }
+.doc-row {
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: #fafcff;
+}
+.doc-row__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+}
+label.inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-weight: 400;
+}
+label.inline input {
+  width: auto;
+  margin: 0;
+}
 
 /* Botões / links */
 .btn {
