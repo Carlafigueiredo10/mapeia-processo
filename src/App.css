@@ -1,0 +1,258 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* Topo */
+.app__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  background: #fff;
+  border-bottom: 1px solid var(--borda);
+}
+.app__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.app__logo {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  background: var(--azul);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 22px;
+}
+.app__brand h1 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--azul);
+}
+.app__brand p {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--cinza);
+}
+
+/* Colunas */
+.app__main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(380px, 460px) 1fr;
+  gap: 0;
+  align-items: start;
+}
+.app__col {
+  padding: 20px 24px;
+}
+.app__col--form {
+  border-right: 1px solid var(--borda);
+  background: #fff;
+  max-height: calc(100vh - 72px);
+  overflow-y: auto;
+}
+.app__col--preview {
+  position: sticky;
+  top: 0;
+}
+
+@media (max-width: 900px) {
+  .app__main {
+    grid-template-columns: 1fr;
+  }
+  .app__col--form {
+    max-height: none;
+  }
+}
+
+.app__footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--cinza);
+  padding: 12px;
+  border-top: 1px solid var(--borda);
+  background: #fff;
+}
+
+/* Formulário */
+.form fieldset {
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  margin: 0 0 16px;
+  padding: 12px 14px 16px;
+}
+.form legend {
+  font-weight: 600;
+  color: var(--azul);
+  font-size: 14px;
+  padding: 0 6px;
+}
+.form legend small,
+.form label small {
+  font-weight: 400;
+  color: var(--cinza);
+}
+.form label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.form input,
+.form textarea {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid var(--borda);
+  border-radius: 7px;
+  font-size: 13px;
+  font-family: inherit;
+}
+.form input:focus,
+.form textarea:focus {
+  outline: 2px solid var(--azul-claro);
+  border-color: var(--azul);
+}
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Cartões de etapa */
+.etapa-card {
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--azul);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: #fafcff;
+}
+.etapa-card--dec {
+  border-left-color: #e0a500;
+  background: #fffdf6;
+}
+.etapa-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.etapa-card__head strong {
+  font-size: 13px;
+}
+.etapa-card__btns button {
+  border: 1px solid var(--borda);
+  background: #fff;
+  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  margin-left: 4px;
+  cursor: pointer;
+}
+.cenario-edit {
+  border-top: 1px dashed var(--borda);
+  padding-top: 8px;
+  margin-top: 6px;
+}
+.add-etapa {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* Botões / links */
+.btn {
+  border: 1px solid var(--borda);
+  background: #fff;
+  color: var(--azul);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.btn:hover {
+  background: var(--azul-claro);
+}
+.btn--primary {
+  background: var(--azul);
+  color: #fff;
+  border-color: var(--azul);
+}
+.btn--primary:hover {
+  background: var(--azul-escuro);
+}
+.btn--ghost {
+  background: transparent;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.link {
+  background: none;
+  border: none;
+  color: var(--azul);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 4px 0;
+}
+.link-danger {
+  background: none;
+  border: none;
+  color: #c0392b;
+  cursor: pointer;
+  font-size: 12px;
+  align-self: end;
+  height: fit-content;
+}
+
+/* Abas + preview */
+.tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.tab {
+  border: 1px solid var(--borda);
+  background: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cinza);
+}
+.tab--on {
+  background: var(--azul);
+  color: #fff;
+  border-color: var(--azul);
+}
+
+.documento__folha,
+.preview__diagram {
+  background: #fff;
+  border: 1px solid var(--borda);
+  border-radius: 10px;
+  padding: 28px;
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+}
+.documento__actions,
+.preview__actions {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.preview__diagram {
+  display: flex;
+  justify-content: center;
+  min-height: 300px;
+}
