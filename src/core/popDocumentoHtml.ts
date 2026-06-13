@@ -155,19 +155,19 @@ export const POP_DOC_CSS = `
   /* ===== Capa ===== */
   .pop-doc .pop-capa {
     position: relative; overflow: hidden; background: #fff;
-    min-height: 460px; margin-bottom: 28px; border-radius: 10px;
+    min-height: 680px; margin-bottom: 28px; border-radius: 10px;
     border: 1px solid #eef2f8; page-break-after: always;
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  .pop-doc .pop-capa__deco { position: absolute; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pop-doc .pop-capa__deco { position: absolute; z-index: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .pop-doc .pop-capa__deco--tr { top: 0; right: 0; width: 60%; height: 240px; background: #1351B4; clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%); }
   .pop-doc .pop-capa__deco--tr::before { content: ''; position: absolute; top: 0; right: 0; width: 55%; height: 120px; background: #f2a23c; clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .pop-doc .pop-capa__deco--tr::after { content: ''; position: absolute; top: 120px; right: 0; width: 42%; height: 120px; background: #0d2a5e; clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .pop-doc .pop-capa__deco--bl { bottom: 0; left: 0; width: 60%; height: 240px; background: #1351B4; clip-path: polygon(0 0, 100% 0, 62% 100%, 0 100%); }
   .pop-doc .pop-capa__deco--bl::before { content: ''; position: absolute; bottom: 0; left: 0; width: 55%; height: 120px; background: #f2a23c; clip-path: polygon(0 0, 72% 0, 100% 100%, 28% 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .pop-doc .pop-capa__deco--bl::after { content: ''; position: absolute; bottom: 120px; left: 0; width: 42%; height: 120px; background: #0d2a5e; clip-path: polygon(0 0, 100% 0, 60% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .pop-doc .pop-capa__topo { position: absolute; top: 28px; left: 36px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #1351B4; font-weight: 600; max-width: 45%; }
-  .pop-doc .pop-capa__centro { position: absolute; left: 36px; right: 36px; top: 50%; transform: translateY(-50%); }
+  .pop-doc .pop-capa__topo { position: absolute; z-index: 1; top: 28px; left: 36px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #1351B4; font-weight: 600; max-width: 45%; }
+  .pop-doc .pop-capa__centro { position: absolute; z-index: 1; left: 36px; right: 36px; top: 44%; transform: translateY(-50%); }
   .pop-doc .pop-capa__rotulo { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #5a6b8c; margin-bottom: 8px; }
   .pop-doc .pop-capa__titulo { font-size: 30px; line-height: 1.15; color: #0d2a5e; margin: 0; font-weight: 700; }
   .pop-doc .pop-capa__linha { width: 80px; height: 4px; background: #f2a23c; margin: 16px 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }

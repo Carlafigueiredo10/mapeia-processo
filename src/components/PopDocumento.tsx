@@ -17,7 +17,7 @@ export default function PopDocumento({ pop }: Props) {
     win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
       <title>${esc(pop.nomeProcesso || 'POP')}</title>
       <style>
-        @page { size: A4 portrait; margin: 16mm; }
+        @page { size: A4 portrait; margin: 20mm; }
         * { box-sizing: border-box; }
         body { margin: 0; }
         ${POP_DOC_CSS}
