@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manual do MapeiaProcesso</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f6fb; font-family: 'Segoe UI', Arial, sans-serif; color: #1a2433; }
+    .folha { max-width: 880px; margin: 0 auto; padding: 24px; }
+
+    .toolbar { display: flex; gap: 10px; align-items: center; justify-content: flex-end; max-width: 880px; margin: 0 auto; padding: 14px 24px 0; }
+    .toolbar a, .toolbar button {
+      font: inherit; font-size: 13px; font-weight: 500; padding: 8px 14px; border-radius: 8px;
+      border: 1px solid #d6e0f0; background: #fff; color: #1351B4; cursor: pointer; text-decoration: none;
+    }
+    .toolbar button { background: #1351B4; color: #fff; border-color: #1351B4; }
+
+    .pop-doc { background: #fff; border-radius: 10px; padding: 28px; line-height: 1.55; }
+    .pop-doc .secao { margin-bottom: 22px; page-break-inside: avoid; }
+    .pop-doc h2 { font-size: 15px; color: #1351B4; border-bottom: 1px solid #d6e0f0; padding-bottom: 5px; margin: 0 0 10px; text-transform: uppercase; letter-spacing: .3px; }
+    .pop-doc h3 { font-size: 14px; color: #0d2a5e; margin: 14px 0 4px; }
+    .pop-doc p { margin: 6px 0; font-size: 14px; }
+    .pop-doc ul { margin: 6px 0; padding-left: 22px; font-size: 14px; }
+    .pop-doc li { margin: 4px 0; }
+    .pop-doc .nota { background: #f7faff; border-left: 3px solid #1351B4; padding: 8px 12px; font-size: 13px; margin: 10px 0; }
+
+    /* ===== Capa (mesma identidade do POP) ===== */
+    .pop-capa {
+      position: relative; overflow: hidden; background: #fff; min-height: 680px;
+      margin-bottom: 28px; border-radius: 10px; border: 3px solid #0d2a5e; page-break-after: always;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+    .pop-capa .deco { position: absolute; z-index: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pop-capa .deco.tr { top: 0; right: 0; width: 60%; height: 240px; background: #1351B4; clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%); }
+    .pop-capa .deco.tr::before { content: ''; position: absolute; top: 0; right: 0; width: 55%; height: 120px; background: #f2a23c; clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pop-capa .deco.tr::after { content: ''; position: absolute; top: 120px; right: 0; width: 42%; height: 120px; background: #0d2a5e; clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pop-capa .deco.bl { bottom: 0; left: 0; width: 60%; height: 240px; background: #1351B4; clip-path: polygon(0 0, 100% 0, 62% 100%, 0 100%); }
+    .pop-capa .deco.bl::before { content: ''; position: absolute; bottom: 0; left: 0; width: 55%; height: 120px; background: #f2a23c; clip-path: polygon(0 0, 72% 0, 100% 100%, 28% 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pop-capa .deco.bl::after { content: ''; position: absolute; bottom: 120px; left: 0; width: 42%; height: 120px; background: #0d2a5e; clip-path: polygon(0 0, 100% 0, 60% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pop-capa .topo { position: absolute; z-index: 1; top: 28px; left: 36px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #1351B4; font-weight: 600; }
+    .pop-capa .centro { position: absolute; z-index: 1; left: 36px; right: 36px; top: 50%; transform: translateY(-50%); }
+    .pop-capa .rotulo { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #5a6b8c; margin-bottom: 8px; }
+    .pop-capa .titulo { font-size: 32px; line-height: 1.15; color: #0d2a5e; margin: 0; font-weight: 700; }
+    .pop-capa .linha { width: 80px; height: 4px; background: #f2a23c; margin: 16px 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .pop-capa .meta { font-size: 12px; color: #444; }
+
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .folha { max-width: none; padding: 0; }
+      .pop-doc { padding: 0; border-radius: 0; }
+      .pop-capa { min-height: 245mm; }
+      @page { size: A4 portrait; margin: 20mm; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <a href="./">Voltar ao MapeiaProcesso</a>
+    <button type="button" onclick="window.print()">Imprimir ou salvar em PDF</button>
+  </div>
+
+  <div class="folha">
+    <div class="pop-doc">
+
+      <section class="pop-capa">
+        <div class="deco tr"></div>
+        <div class="deco bl"></div>
+        <div class="topo">MapeiaProcesso</div>
+        <div class="centro">
+          <div class="rotulo">Manual do Usuário</div>
+          <h1 class="titulo">Como usar o MapeiaProcesso</h1>
+          <div class="linha"></div>
+          <div class="meta">Guia rápido, versão 1.0</div>
+        </div>
+      </section>
+
+      <section class="secao">
+        <h2>O que é o MapeiaProcesso</h2>
+        <p>O MapeiaProcesso é uma ferramenta livre e gratuita para documentar processos de trabalho. Você descreve as etapas de um processo e o sistema gera, na hora, dois resultados: o documento do POP (Procedimento Operacional Padrão) e o fluxograma. Tudo acontece no seu navegador, e nenhum dado é enviado para servidores.</p>
+      </section>
+
+      <section class="secao">
+        <h2>Como funciona, em resumo</h2>
+        <p>A tela tem duas partes. À esquerda fica o formulário, onde você preenche as informações do processo. À direita fica a visualização, com duas abas: "Documento (POP)" e "Fluxograma". O que você digita aparece na visualização na mesma hora. Quando terminar, use o botão "Exportar documentos POP".</p>
+      </section>
+
+      <section class="secao">
+        <h2>Passo 1: Identificação do processo</h2>
+        <p>Preencha os campos de identificação: nome do processo, unidade ou órgão, área, código, versão, macroprocesso, processo, subprocesso e o tempo estimado do processo inteiro. Esses dados aparecem na capa e na primeira seção do documento. O tempo estimado é informado uma vez, para o processo todo, e não por etapa.</p>
+      </section>
+
+      <section class="secao">
+        <h2>Passo 2: As seções do POP</h2>
+        <p>O POP tem sete seções: entrega esperada, dispositivos normativos, sistemas utilizados, operadores, tarefas, documentos e pontos de atenção. Preencha as que fizerem sentido para o seu processo. Na seção de dispositivos normativos há um atalho para o Sigepe Legis, que ajuda a localizar normas.</p>
+      </section>
+
+      <section class="secao">
+        <h2>Passo 3: As tarefas (etapas e decisões)</h2>
+        <p>Esta é a parte central. Você monta o processo como uma sequência de itens, na ordem em que acontecem. Existem dois tipos:</p>
+        <h3>Etapa</h3>
+        <p>Um passo normal, ou seja, uma ação do processo. Você informa a ação, o operador responsável, os sistemas e os documentos requeridos ou gerados.</p>
+        <h3>Decisão</h3>
+        <p>Um ponto de bifurcação. No fluxograma ela vira um losango. A decisão tem uma pergunta (por exemplo, "documentação aprovada?") e vários caminhos (por exemplo, "Sim" e "Não"). Cada caminho tem os seus próprios passos. Os caminhos se separam na decisão e voltam a se juntar na etapa seguinte.</p>
+        <p class="nota">A decisão pode ser inserida depois de qualquer etapa. Use as setas para cima e para baixo para posicionar cada item na ordem certa.</p>
+      </section>
+
+      <section class="secao">
+        <h2>Passo 4: Exportar os documentos</h2>
+        <p>Clique em "Exportar documentos POP". Um aviso explica que serão baixados dois arquivos. Salve os dois:</p>
+        <ul>
+          <li>O <strong>PDF do POP</strong>, que é o documento final, para imprimir ou compartilhar.</li>
+          <li>O <strong>arquivo editável</strong>, que serve para revisar ou alterar o POP no futuro.</li>
+        </ul>
+        <p>O nome do arquivo editável aparece no aviso. Guarde esse arquivo com cuidado, porque ele é a versão que pode ser aberta para edição depois.</p>
+      </section>
+
+      <section class="secao">
+        <h2>Como editar um POP depois</h2>
+        <p>Como o sistema não usa banco de dados, o arquivo editável funciona como a sua cópia para revisão. Para alterar um POP já feito, clique em "Editar um POP" e abra o arquivo editável que você salvou. Os campos voltam preenchidos, idênticos ao original. O sistema sugere registrar como uma nova versão (por exemplo, da versão 1.0 para a 2.0). Você decide se aceita a sugestão ou se mantém a versão atual.</p>
+        <p class="nota">O PDF não pode ser reaberto para edição. Por isso, sempre guarde o arquivo editável junto com o PDF.</p>
+      </section>
+
+      <section class="secao">
+        <h2>O fluxograma</h2>
+        <p>Na aba "Fluxograma", o desenho é gerado automaticamente a partir das etapas e decisões que você cadastrou. As decisões aparecem como losangos com os seus caminhos, que se separam e voltam a se juntar. Você pode exportar o fluxograma em PDF ou em imagem (formato SVG).</p>
+      </section>
+
+      <section class="secao">
+        <h2>Privacidade e seus dados</h2>
+        <p>Os seus dados ficam apenas no seu navegador, no próprio computador. Nada é enviado para a internet e não há rastreamento. O sistema guarda automaticamente o que você está fazendo, para você não perder o trabalho ao fechar a aba. Em um computador compartilhado, clique em "Novo POP" ao terminar, para limpar os dados.</p>
+      </section>
+
+      <section class="secao">
+        <h2>Perguntas frequentes</h2>
+        <h3>Preciso instalar alguma coisa?</h3>
+        <p>Não. O MapeiaProcesso funciona direto no navegador.</p>
+        <h3>Preciso de internet?</h3>
+        <p>Apenas para abrir a página. Depois disso, o trabalho acontece no seu navegador.</p>
+        <h3>Perdi o arquivo editável. E agora?</h3>
+        <p>O PDF sozinho não pode ser reaberto para edição. Por isso a recomendação é sempre salvar e guardar o arquivo editável junto com o PDF.</p>
+        <h3>Posso usar em qualquer órgão?</h3>
+        <p>Sim. A ferramenta é livre (licença MIT) e pode ser usada e adaptada por qualquer pessoa ou instituição.</p>
+      </section>
+
+    </div>
+  </div>
+</body>
+</html>

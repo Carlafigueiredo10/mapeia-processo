@@ -101,6 +101,10 @@
   border-top: 1px solid var(--borda);
   background: #fff;
 }
+.app__footer a {
+  color: var(--azul);
+  font-weight: 500;
+}
 
 /* Formulário */
 .form fieldset {
