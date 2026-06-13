@@ -23,7 +23,6 @@ export interface Etapa {
   docsRequeridos?: string[];
   docsGerados?: string[];
   verificacoes?: string[];
-  tempoEstimado?: string;
   /** Apenas quando tipo === 'condicional'. */
   cenarios?: Cenario[];
 }
@@ -40,11 +39,14 @@ export interface Pop {
   // Identificação
   nomeProcesso: string;
   unidade?: string;
+  area?: string;
   codigo?: string;
   versao: string;
   macroprocesso?: string;
   processoEspecifico?: string;
   subprocesso?: string;
+  /** Tempo estimado do PROCESSO inteiro (uma vez, não por etapa). */
+  tempoEstimado?: string;
   // Seções
   entregaEsperada?: string;          // 1
   dispositivosNormativos?: string;   // 2

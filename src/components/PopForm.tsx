@@ -76,6 +76,9 @@ export default function PopForm({ pop, onChange }: Props) {
           <label>Unidade / Órgão
             <input value={pop.unidade || ''} onChange={(e) => set({ unidade: e.target.value })} />
           </label>
+          <label>Área (organizacional)
+            <input value={pop.area || ''} onChange={(e) => set({ area: e.target.value })} placeholder="Ex.: Coordenação de Benefícios" />
+          </label>
           <label>Código na arquitetura
             <input value={pop.codigo || ''} onChange={(e) => set({ codigo: e.target.value })} />
           </label>
@@ -91,6 +94,9 @@ export default function PopForm({ pop, onChange }: Props) {
           <label>Subprocesso
             <input value={pop.subprocesso || ''} onChange={(e) => set({ subprocesso: e.target.value })} />
           </label>
+          <label>Tempo estimado do processo <small>(uma vez, não por etapa)</small>
+            <input value={pop.tempoEstimado || ''} onChange={(e) => set({ tempoEstimado: e.target.value })} placeholder="Ex.: 5 dias úteis" />
+          </label>
         </div>
       </fieldset>
 
@@ -102,6 +108,12 @@ export default function PopForm({ pop, onChange }: Props) {
       <fieldset>
         <legend>2. Dispositivos normativos</legend>
         <textarea rows={2} value={pop.dispositivosNormativos || ''} onChange={(e) => set({ dispositivosNormativos: e.target.value })} />
+        <p className="dica">
+          Precisa localizar uma norma?{' '}
+          <a href="https://legis.sigepe.gov.br/legis/chat-legis" target="_blank" rel="noopener noreferrer">
+            Pesquisar no Sigepe Legis ↗
+          </a>
+        </p>
       </fieldset>
 
       <fieldset>
@@ -135,14 +147,9 @@ export default function PopForm({ pop, onChange }: Props) {
 
             {etapa.tipo === 'normal' && (
               <>
-                <div className="grid2">
-                  <label>Operador
-                    <input value={etapa.operador || ''} onChange={(e) => updEtapa(i, { operador: e.target.value })} />
-                  </label>
-                  <label>Tempo estimado
-                    <input value={etapa.tempoEstimado || ''} onChange={(e) => updEtapa(i, { tempoEstimado: e.target.value })} />
-                  </label>
-                </div>
+                <label>Operador
+                  <input value={etapa.operador || ''} onChange={(e) => updEtapa(i, { operador: e.target.value })} />
+                </label>
                 <div className="grid2">
                   <label>Sistemas <small>(vírgula)</small>
                     <input value={(etapa.sistemas || []).join(', ')}

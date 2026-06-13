@@ -48,7 +48,6 @@ function normEtapa(e: unknown): Etapa {
     docsRequeridos: strArr(o.docsRequeridos),
     docsGerados: strArr(o.docsGerados),
     verificacoes: strArr(o.verificacoes),
-    tempoEstimado: strOuUndef(o.tempoEstimado),
   };
   if (tipo === 'condicional') {
     etapa.cenarios = Array.isArray(o.cenarios) ? o.cenarios.slice(0, MAX_CENARIOS).map(normCenario) : [];
@@ -74,11 +73,13 @@ export function normalizarPop(input: unknown): Pop {
   return {
     nomeProcesso: str(o.nomeProcesso),
     unidade: strOuUndef(o.unidade),
+    area: strOuUndef(o.area),
     codigo: strOuUndef(o.codigo),
     versao: str(o.versao) || base.versao,
     macroprocesso: strOuUndef(o.macroprocesso),
     processoEspecifico: strOuUndef(o.processoEspecifico),
     subprocesso: strOuUndef(o.subprocesso),
+    tempoEstimado: strOuUndef(o.tempoEstimado),
     entregaEsperada: strOuUndef(o.entregaEsperada),
     dispositivosNormativos: strOuUndef(o.dispositivosNormativos),
     sistemasUtilizados: strArr(o.sistemasUtilizados),

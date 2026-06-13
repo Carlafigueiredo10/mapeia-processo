@@ -39,7 +39,6 @@ function etapaHtml(etapa: Etapa, numero: number): string {
   if (etapa.sistemas?.length) meta.push(`<b>Sistemas:</b> ${esc(etapa.sistemas.join(', '))}`);
   if (etapa.docsRequeridos?.length) meta.push(`<b>Docs requeridos:</b> ${esc(etapa.docsRequeridos.join(', '))}`);
   if (etapa.docsGerados?.length) meta.push(`<b>Docs gerados:</b> ${esc(etapa.docsGerados.join(', '))}`);
-  if (etapa.tempoEstimado?.trim()) meta.push(`<b>Tempo estimado:</b> ${esc(etapa.tempoEstimado)}`);
   const verifs = (etapa.verificacoes || []).map((v) => v.trim()).filter(Boolean);
 
   return `
@@ -74,6 +73,27 @@ function secao(titulo: string, conteudo: string): string {
   return `<section class="secao"><h2>${esc(titulo)}</h2>${conteudo}</section>`;
 }
 
+/** Capa do POP — formas geométricas (azul/laranja) + título. 1 página no PDF. */
+function capaHtml(pop: Pop): string {
+  const topo = (pop.unidade || pop.area || '').trim();
+  return `
+    <section class="pop-capa">
+      <div class="pop-capa__deco pop-capa__deco--tr"></div>
+      <div class="pop-capa__deco pop-capa__deco--bl"></div>
+      ${topo ? `<div class="pop-capa__topo">${esc(topo)}</div>` : ''}
+      <div class="pop-capa__centro">
+        <div class="pop-capa__rotulo">Procedimento Operacional Padrão</div>
+        <h1 class="pop-capa__titulo">${esc(pop.nomeProcesso || 'Processo')}</h1>
+        <div class="pop-capa__linha"></div>
+        <div class="pop-capa__meta">
+          ${pop.area ? `<span>Área: ${esc(pop.area)}</span>` : ''}
+          <span>Versão ${esc(pop.versao || '1.0')}</span>
+          <span>${esc(new Date().toLocaleDateString('pt-BR'))}</span>
+        </div>
+      </div>
+    </section>`;
+}
+
 /** Corpo do documento (sem <html>/<style> — usado no preview e no print). */
 export function popDocumentoHtml(pop: Pop): string {
   const etapas = pop.etapas || [];
@@ -82,24 +102,20 @@ export function popDocumentoHtml(pop: Pop): string {
     : '<p class="vazio">[Nenhuma etapa mapeada]</p>';
 
   return `
-    <header class="doc-header">
-      <h1>${esc(pop.nomeProcesso || 'Procedimento Operacional Padrão')}</h1>
-      <div class="meta">
-        ${pop.unidade ? `<span>Unidade: ${esc(pop.unidade)}</span>` : ''}
-        <span>Versão: ${esc(pop.versao || '1.0')}</span>
-        <span>Data: ${new Date().toLocaleDateString('pt-BR')}</span>
-      </div>
-    </header>
+    ${capaHtml(pop)}
 
     ${secao(
       'Identificação do Processo',
       `<div class="ident">
+        <p><b>Unidade / Órgão:</b> ${naoInformado(pop.unidade)}</p>
+        <p><b>Área:</b> ${naoInformado(pop.area)}</p>
         <p><b>Código na arquitetura:</b> ${naoInformado(pop.codigo)}</p>
         <p><b>Versão:</b> ${esc(pop.versao || '1.0')}</p>
         <p><b>Macroprocesso:</b> ${naoInformado(pop.macroprocesso)}</p>
         <p><b>Processo:</b> ${naoInformado(pop.processoEspecifico)}</p>
         <p><b>Subprocesso:</b> ${naoInformado(pop.subprocesso)}</p>
         <p><b>Atividade:</b> ${pendente(pop.nomeProcesso)}</p>
+        <p><b>Tempo estimado do processo:</b> ${naoInformado(pop.tempoEstimado)}</p>
       </div>`,
     )}
 
@@ -135,4 +151,26 @@ export const POP_DOC_CSS = `
   .pop-doc table.docs { width: 100%; border-collapse: collapse; font-size: 12px; }
   .pop-doc table.docs th, .pop-doc table.docs td { border: 1px solid #d6e0f0; padding: 6px 8px; text-align: left; }
   .pop-doc table.docs th { background: #eaf1fb; color: #1351B4; }
+
+  /* ===== Capa ===== */
+  .pop-doc .pop-capa {
+    position: relative; overflow: hidden; background: #fff;
+    min-height: 460px; margin-bottom: 28px; border-radius: 10px;
+    border: 1px solid #eef2f8; page-break-after: always;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .pop-doc .pop-capa__deco { position: absolute; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pop-doc .pop-capa__deco--tr { top: 0; right: 0; width: 60%; height: 240px; background: #1351B4; clip-path: polygon(38% 0, 100% 0, 100% 100%, 0 100%); }
+  .pop-doc .pop-capa__deco--tr::before { content: ''; position: absolute; top: 0; right: 0; width: 55%; height: 120px; background: #f2a23c; clip-path: polygon(28% 0, 100% 0, 72% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pop-doc .pop-capa__deco--tr::after { content: ''; position: absolute; top: 120px; right: 0; width: 42%; height: 120px; background: #0d2a5e; clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pop-doc .pop-capa__deco--bl { bottom: 0; left: 0; width: 60%; height: 240px; background: #1351B4; clip-path: polygon(0 0, 100% 0, 62% 100%, 0 100%); }
+  .pop-doc .pop-capa__deco--bl::before { content: ''; position: absolute; bottom: 0; left: 0; width: 55%; height: 120px; background: #f2a23c; clip-path: polygon(0 0, 72% 0, 100% 100%, 28% 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pop-doc .pop-capa__deco--bl::after { content: ''; position: absolute; bottom: 120px; left: 0; width: 42%; height: 120px; background: #0d2a5e; clip-path: polygon(0 0, 100% 0, 60% 100%, 0 100%); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pop-doc .pop-capa__topo { position: absolute; top: 28px; left: 36px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: #1351B4; font-weight: 600; max-width: 45%; }
+  .pop-doc .pop-capa__centro { position: absolute; left: 36px; right: 36px; top: 50%; transform: translateY(-50%); }
+  .pop-doc .pop-capa__rotulo { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #5a6b8c; margin-bottom: 8px; }
+  .pop-doc .pop-capa__titulo { font-size: 30px; line-height: 1.15; color: #0d2a5e; margin: 0; font-weight: 700; }
+  .pop-doc .pop-capa__linha { width: 80px; height: 4px; background: #f2a23c; margin: 16px 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .pop-doc .pop-capa__meta { font-size: 12px; color: #444; display: flex; gap: 16px; flex-wrap: wrap; }
+  @media print { .pop-doc .pop-capa { min-height: 245mm; } }
 `;

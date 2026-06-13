@@ -129,6 +129,15 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
+.dica {
+  font-size: 12px;
+  color: var(--cinza);
+  margin: 8px 0 0;
+}
+.dica a {
+  color: var(--azul);
+  font-weight: 500;
+}
 
 /* Cartões de etapa */
 .etapa-card {
