@@ -67,4 +67,11 @@ describe('popIo', () => {
     expect(lido.etapas[2].acaoPrincipal).toBe(''); // string solta vira etapa vazia
     expect(lido.etapas.every((e) => typeof e.id === 'string')).toBe(true);
   });
+
+  it('aplica limites defensivos (anti-DoS) no import', () => {
+    const etapas = Array.from({ length: 10_000 }, () => ({ tipo: 'normal', acaoPrincipal: 'x' }));
+    const lido = importarPopJson(JSON.stringify({ nomeProcesso: 'A'.repeat(100_000), etapas }));
+    expect(lido.etapas.length).toBeLessThanOrEqual(500); // nº de etapas limitado
+    expect(lido.nomeProcesso.length).toBeLessThanOrEqual(20_000); // string truncada
+  });
 });

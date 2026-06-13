@@ -5,9 +5,20 @@
 import type { Cenario, DocumentoPop, Etapa, Pop, Subetapa } from './types';
 import { popVazio } from './types';
 
-const str = (v: unknown): string => (typeof v === 'string' ? v : '');
-const strOuUndef = (v: unknown): string | undefined => (typeof v === 'string' && v !== '' ? v : undefined);
-const strArr = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : []);
+// Limites defensivos: impedem que um .json hostil/gigante trave o render (DoS local).
+const MAX_STR = 20_000; // caracteres por campo de texto
+const MAX_ETAPAS = 500;
+const MAX_CENARIOS = 50;
+const MAX_SUBETAPAS = 100;
+const MAX_LISTA = 200; // itens em listas (sistemas, docs, etc.)
+
+const str = (v: unknown): string => (typeof v === 'string' ? v.slice(0, MAX_STR) : '');
+const strOuUndef = (v: unknown): string | undefined => {
+  const s = str(v);
+  return s !== '' ? s : undefined;
+};
+const strArr = (v: unknown): string[] =>
+  Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string').slice(0, MAX_LISTA).map((x) => x.slice(0, MAX_STR)) : [];
 const obj = (v: unknown): Record<string, unknown> => (v && typeof v === 'object' ? (v as Record<string, unknown>) : {});
 
 let idSeq = 0;
@@ -21,7 +32,7 @@ function normCenario(c: unknown): Cenario {
   const o = obj(c);
   return {
     descricao: str(o.descricao),
-    subetapas: Array.isArray(o.subetapas) ? o.subetapas.map(normSubetapa) : [],
+    subetapas: Array.isArray(o.subetapas) ? o.subetapas.slice(0, MAX_SUBETAPAS).map(normSubetapa) : [],
   };
 }
 
@@ -40,7 +51,7 @@ function normEtapa(e: unknown): Etapa {
     tempoEstimado: strOuUndef(o.tempoEstimado),
   };
   if (tipo === 'condicional') {
-    etapa.cenarios = Array.isArray(o.cenarios) ? o.cenarios.map(normCenario) : [];
+    etapa.cenarios = Array.isArray(o.cenarios) ? o.cenarios.slice(0, MAX_CENARIOS).map(normCenario) : [];
   }
   return etapa;
 }
@@ -72,8 +83,8 @@ export function normalizarPop(input: unknown): Pop {
     dispositivosNormativos: strOuUndef(o.dispositivosNormativos),
     sistemasUtilizados: strArr(o.sistemasUtilizados),
     operadores: strOuUndef(o.operadores),
-    etapas: Array.isArray(o.etapas) ? o.etapas.map(normEtapa) : [],
-    documentos: Array.isArray(o.documentos) ? o.documentos.map(normDoc) : [],
+    etapas: Array.isArray(o.etapas) ? o.etapas.slice(0, MAX_ETAPAS).map(normEtapa) : [],
+    documentos: Array.isArray(o.documentos) ? o.documentos.slice(0, MAX_LISTA).map(normDoc) : [],
     pontosAtencao: strOuUndef(o.pontosAtencao),
   };
 }

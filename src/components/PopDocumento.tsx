@@ -13,6 +13,7 @@ export default function PopDocumento({ pop }: Props) {
   const exportarPdf = () => {
     const win = window.open('', '_blank', 'width=900,height=1200');
     if (!win) return;
+    win.opener = null; // corta o vínculo opener (defesa em profundidade)
     win.document.write(`<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
       <title>${esc(pop.nomeProcesso || 'POP')}</title>
       <style>

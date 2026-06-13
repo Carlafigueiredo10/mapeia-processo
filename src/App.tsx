@@ -124,7 +124,8 @@ export default function App() {
       </main>
 
       <footer className="app__footer">
-        Software livre · seus dados ficam só no seu navegador (nada é enviado a servidor).
+        Software livre · seus dados ficam só neste navegador (nada é enviado a servidor; sem rastreamento).
+        Em computador compartilhado, clique em <strong>Novo POP</strong> ao terminar para limpar.
       </footer>
     </div>
   );
