@@ -3,7 +3,7 @@ import type { Pop } from './core/types';
 import { popVazio } from './core/types';
 import { popParaFluxograma } from './core/popParaFluxograma';
 import { gerarMermaid } from './core/gerarMermaid';
-import { exportarPopJson, importarPopJson, nomeArquivo, normalizarPop, parseJsonSeguro } from './core/popIo';
+import { exportarPopJson, importarPopJson, nomeArquivo, normalizarPop, parseJsonSeguro, proximaVersao } from './core/popIo';
 import PopForm from './components/PopForm';
 import PopDocumento from './components/PopDocumento';
 import FluxogramaPreview from './components/FluxogramaPreview';
@@ -28,6 +28,8 @@ export default function App() {
   const [pop, setPop] = useState<Pop>(carregar);
   const [aba, setAba] = useState<Aba>('documento');
   const fileRef = useRef<HTMLInputElement>(null);
+  // Sugestão de nova versão após abrir um POP para edição (null = sem banner).
+  const [versaoSugerida, setVersaoSugerida] = useState<string | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => localStorage.setItem(STORAGE_KEY, JSON.stringify(pop)), 300);
@@ -57,12 +59,20 @@ export default function App() {
     const reader = new FileReader();
     reader.onload = () => {
       try {
-        setPop(importarPopJson(String(reader.result)));
+        const novo = importarPopJson(String(reader.result));
+        setPop(novo);
+        // Editando um POP existente: sugere registrar como nova versão.
+        setVersaoSugerida(novo.nomeProcesso ? proximaVersao(novo.versao) : null);
       } catch {
-        alert('Não foi possível abrir: arquivo .json inválido.');
+        alert('Não consegui abrir este arquivo. Selecione o arquivo editável do POP (o que você baixou em "Salvar arquivo editável").');
       }
     };
     reader.readAsText(file);
+  };
+
+  const aplicarVersao = () => {
+    if (versaoSugerida) setPop((p) => ({ ...p, versao: versaoSugerida }));
+    setVersaoSugerida(null);
   };
 
   return (
@@ -87,11 +97,24 @@ export default function App() {
               e.target.value = '';
             }}
           />
-          <button className="btn btn--ghost" onClick={() => fileRef.current?.click()}>Abrir .json</button>
-          <button className="btn btn--ghost" onClick={baixarJson}>Baixar .json</button>
+          <button className="btn btn--ghost" onClick={() => fileRef.current?.click()} title="Abra o arquivo editável de um POP que você salvou antes">Editar um POP</button>
+          <button className="btn btn--ghost" onClick={baixarJson} title="Baixa o arquivo editável deste POP, para você alterar depois">Salvar arquivo editável</button>
           <button className="btn btn--ghost" onClick={limpar}>Novo POP</button>
         </div>
       </header>
+
+      {versaoSugerida && (
+        <div className="edit-banner">
+          <span>
+            POP carregado para edição. Quer registrar como uma nova versão?
+            Sugestão: <strong>versão {versaoSugerida}</strong> (a atual é {pop.versao}).
+          </span>
+          <span className="edit-banner__acoes">
+            <button className="btn btn--primary" onClick={aplicarVersao}>Usar versão {versaoSugerida}</button>
+            <button className="btn" onClick={() => setVersaoSugerida(null)}>Manter {pop.versao}</button>
+          </span>
+        </div>
+      )}
 
       <main className="app__main">
         <section className="app__col app__col--form">

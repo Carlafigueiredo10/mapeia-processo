@@ -76,6 +76,23 @@
   }
 }
 
+.edit-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: #eaf1fb;
+  border-bottom: 1px solid var(--borda);
+  padding: 10px 24px;
+  font-size: 13px;
+  color: var(--tinta);
+}
+.edit-banner__acoes {
+  display: flex;
+  gap: 8px;
+}
+
 .app__footer {
   text-align: center;
   font-size: 12px;

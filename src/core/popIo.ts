@@ -104,6 +104,13 @@ export function exportarPopJson(pop: Pop): string {
   return JSON.stringify(pop, null, 2);
 }
 
+/** Sugere a próxima versão (major) ao editar um POP existente. "1.0" -> "2.0". */
+export function proximaVersao(versao: string): string {
+  const m = (versao || '').match(/^\s*(\d+)/);
+  const maior = m ? parseInt(m[1], 10) : 1;
+  return `${maior + 1}.0`;
+}
+
 /** Lê e valida um POP de um texto JSON. Lança Error se o JSON for inválido. */
 export function importarPopJson(texto: string): Pop {
   const parsed = parseJsonSeguro(texto);
@@ -118,5 +125,5 @@ export function nomeArquivo(pop: Pop): string {
   const base = (pop.nomeProcesso || 'pop').trim().toLowerCase()
     .normalize('NFD').replace(/[̀-ͯ]/g, '') // remove acentos
     .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'pop';
-  return `${base}.json`;
+  return `${base}-editavel.json`;
 }

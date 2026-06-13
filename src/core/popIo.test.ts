@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { exportarPopJson, importarPopJson, nomeArquivo } from './popIo';
+import { exportarPopJson, importarPopJson, nomeArquivo, proximaVersao } from './popIo';
 import { popVazio } from './types';
 import type { Pop } from './types';
 
@@ -35,8 +35,15 @@ describe('popIo', () => {
   });
 
   it('nomeArquivo remove acentos e normaliza', () => {
-    expect(nomeArquivo(pop)).toBe('concessao-de-pensao.json');
-    expect(nomeArquivo({ ...pop, nomeProcesso: '' })).toBe('pop.json');
+    expect(nomeArquivo(pop)).toBe('concessao-de-pensao-editavel.json');
+    expect(nomeArquivo({ ...pop, nomeProcesso: '' })).toBe('pop-editavel.json');
+  });
+
+  it('proximaVersao sugere o próximo major', () => {
+    expect(proximaVersao('1.0')).toBe('2.0');
+    expect(proximaVersao('2.5')).toBe('3.0');
+    expect(proximaVersao('')).toBe('2.0');
+    expect(proximaVersao('abc')).toBe('2.0');
   });
 
   it('bloqueia prototype pollution via __proto__', () => {
