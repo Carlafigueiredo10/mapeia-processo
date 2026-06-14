@@ -9,11 +9,12 @@
       e scripts externos (vetor de XSS); 'unsafe-eval' é necessário porque o
       Mermaid/dependências usam o construtor Function em runtime. style-src
       'unsafe-inline' é exigido pelos estilos inline do Mermaid e do documento.
-      Sem backend: connect-src 'self', object-src 'none', base-uri 'none'.
+      gc.zgo.at + *.goatcounter.com liberam só o GoatCounter (métricas anônimas,
+      sem cookies). O conteúdo do POP nunca é enviado.
     -->
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+      content="default-src 'self'; script-src 'self' 'unsafe-eval' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://*.goatcounter.com; font-src 'self' data:; connect-src 'self' https://*.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'"
     />
     <meta name="description" content="Mapeie seu processo, gere o POP (Procedimento Operacional Padrão) e o fluxograma em PDF — tudo no navegador, sem servidor." />
     <title>MapeiaProcesso — POP e fluxograma no navegador</title>
@@ -21,5 +22,11 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <!-- Métricas de uso anônimas e sem cookies (GoatCounter). Não conta em localhost. -->
+    <script
+      data-goatcounter="https://mapeiaprocesso.goatcounter.com/count"
+      async
+      src="//gc.zgo.at/count.js"
+    ></script>
   </body>
 </html>

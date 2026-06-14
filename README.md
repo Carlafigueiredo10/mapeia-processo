@@ -9,8 +9,10 @@ gera, na hora:
 - 📄 o **documento do POP** formatado (7 seções padrão) pronto para **exportar em PDF**;
 - 🔀 o **fluxograma** do processo (com losangos de decisão e reconvergência), também **exportável em PDF/SVG**.
 
-> Sem servidor, sem cadastro, sem nuvem. Seus dados ficam **só no seu navegador**
-> (salvos localmente). Nada é enviado a lugar nenhum.
+> Sem servidor, sem cadastro, sem nuvem. O **conteúdo do seu POP** fica **só no seu
+> navegador** (salvo localmente) e nunca é enviado. As únicas informações coletadas
+> são métricas de acesso anônimas e sem cookies (GoatCounter), para entender o
+> alcance da ferramenta.
 
 ## Por que existe
 
@@ -39,7 +41,8 @@ determinístico** que transforma as etapas estruturadas em:
 - um documento POP (HTML → PDF via impressão do navegador);
 - uma topologia de fluxograma renderizada com [Mermaid](https://mermaid.js.org/).
 
-Nenhum dado sai do navegador; nenhuma chave de API é necessária.
+O conteúdo do POP não sai do navegador; nenhuma chave de API é necessária. As
+métricas de acesso (GoatCounter) são anônimas, sem cookies e sem dados pessoais.
 
 ## Estrutura
 
