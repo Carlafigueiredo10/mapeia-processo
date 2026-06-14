@@ -241,6 +241,21 @@ export default function PopForm({ pop, onChange }: Props) {
         <legend>7. Pontos de atenção</legend>
         <textarea rows={2} value={pop.pontosAtencao || ''} onChange={(e) => set({ pontosAtencao: e.target.value })} />
       </fieldset>
+
+      <div className="form-ajuda">
+        <div className="form-ajuda__txt">
+          <strong>Primeira vez por aqui?</strong>
+          Veja o manual com o passo a passo para montar o POP, usar as decisões e exportar os arquivos.
+        </div>
+        <a
+          className="btn btn--primary"
+          href={`${import.meta.env.BASE_URL}manual.html`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Abrir o manual
+        </a>
+      </div>
     </div>
   );
 }
